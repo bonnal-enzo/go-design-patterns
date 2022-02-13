@@ -45,7 +45,7 @@ type AbstractFactory interface {
 type ConcreteFactory1 struct{}
 
 func (concreteFactory ConcreteFactory1) CreateProduct() AbstractProduct {
-	return &ConcreteProduct1{}
+	return ConcreteProduct1{}
 }
 
 // ----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ func (concreteFactory ConcreteFactory1) CreateProduct() AbstractProduct {
 type ConcreteFactory2 struct{}
 
 func (concreteFactory ConcreteFactory2) CreateProduct() AbstractProduct {
-	return &ConcreteProduct2{}
+	return ConcreteProduct2{}
 }
 
 // ----------------------------------------------------------------------------
@@ -62,22 +62,12 @@ type Client struct {
 	factory AbstractFactory
 }
 
-func NewClient(factory AbstractFactory) *Client {
+func NewClient(factory AbstractFactory) Client {
 	// Dependency Injection
-	return &Client{factory}
+	return Client{factory}
 }
 
 // Instanciate a product and prints it
 func (client Client) ShowAProduct() {
 	fmt.Println(client.factory.CreateProduct())
-}
-
-// ----------------------------------------------------------------------------
-// Clients in action
-func main() {
-	var client1 *Client = NewClient(&ConcreteFactory1{})
-	client1.ShowAProduct()
-
-	var client2 *Client = NewClient(&ConcreteFactory2{})
-	client2.ShowAProduct()
 }
