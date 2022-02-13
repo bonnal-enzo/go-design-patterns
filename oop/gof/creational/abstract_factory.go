@@ -1,4 +1,4 @@
-package main
+package creational
 
 import "fmt"
 
@@ -9,7 +9,7 @@ import "fmt"
 // ----------------------------------------------------------------------------
 // Declares an interface for a type of product object
 type AbstractProduct interface {
-	DescribeMyType() // Prints information about product's concrete type
+	String() string // Returns information about product's concrete type
 }
 
 // ----------------------------------------------------------------------------
@@ -17,8 +17,8 @@ type AbstractProduct interface {
 // Implements the AbstractProduct interface
 type ConcreteProduct1 struct{}
 
-func (concreteProduct ConcreteProduct1) DescribeMyType() {
-	fmt.Println("Hi, I am a concrete product of type 1")
+func (concreteProduct ConcreteProduct1) String() string {
+	return "Hi, I am a concrete product of type 1"
 }
 
 // ----------------------------------------------------------------------------
@@ -26,15 +26,18 @@ func (concreteProduct ConcreteProduct1) DescribeMyType() {
 // Implements the AbstractProduct interface
 type ConcreteProduct2 struct{}
 
-func (concreteProduct ConcreteProduct2) DescribeMyType() {
-	fmt.Println("Hi, I am a concrete product of type 2")
+func (concreteProduct ConcreteProduct2) String() string {
+	return "Hi, I am a concrete product of type 2"
 }
 
 // ----------------------------------------------------------------------------
 // Declares an interface for operations that create AbstractProduct objects
 type AbstractFactory interface {
 	CreateProduct() AbstractProduct
-	/* CreateProductB() AbstractProductB */ // Factories may have several methods to produce other unrelated types of abstract products
+	// Other optional methods to produce other unrelated types of abstract products:
+	/* CreateProductB() AbstractProductB */
+	/* CreateProductC() AbstractProductC */
+	/* ... */
 }
 
 // ----------------------------------------------------------------------------
@@ -42,7 +45,7 @@ type AbstractFactory interface {
 type ConcreteFactory1 struct{}
 
 func (concreteFactory ConcreteFactory1) CreateProduct() AbstractProduct {
-	return ConcreteProduct1{}
+	return &ConcreteProduct1{}
 }
 
 // ----------------------------------------------------------------------------
@@ -50,31 +53,31 @@ func (concreteFactory ConcreteFactory1) CreateProduct() AbstractProduct {
 type ConcreteFactory2 struct{}
 
 func (concreteFactory ConcreteFactory2) CreateProduct() AbstractProduct {
-	return ConcreteProduct2{}
+	return &ConcreteProduct2{}
 }
 
 // ----------------------------------------------------------------------------
 // Uses only AbstractFactory and AbstractProduct interfaces
 type Client struct {
 	factory AbstractFactory
-	product AbstractProduct
 }
 
-func NewClient(factory AbstractFactory) (client Client) {
+func NewClient(factory AbstractFactory) *Client {
 	// Dependency Injection
-	client.factory = factory
-	client.product = factory.CreateProduct()
-	return
-}
-func (client Client) PresentProduct() {
-	client.product.DescribeMyType()
+	return &Client{factory}
 }
 
+// Instanciate a product and prints it
+func (client Client) ShowAProduct() {
+	fmt.Println(client.factory.CreateProduct())
+}
+
+// ----------------------------------------------------------------------------
 // Clients in action
 func main() {
-	var client1 Client = NewClient(ConcreteFactory1{})
-	client1.PresentProduct()
+	var client1 *Client = NewClient(&ConcreteFactory1{})
+	client1.ShowAProduct()
 
-	var client2 Client = NewClient(ConcreteFactory2{})
-	client2.PresentProduct()
+	var client2 *Client = NewClient(&ConcreteFactory2{})
+	client2.ShowAProduct()
 }

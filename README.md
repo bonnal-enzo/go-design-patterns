@@ -1,2 +1,2 @@
 # go-design-patterns
-GoF's OOP design patterns in Go
+Design patterns in Go
