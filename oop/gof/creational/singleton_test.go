@@ -2,7 +2,7 @@ package creational
 
 import "testing"
 
-// Clients in action
+// Client code
 func TestSingleton(t *testing.T) {
 	var singleton1 Singleton = SingletonInstance()
 	singleton1.SingletonOperation()

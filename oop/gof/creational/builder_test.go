@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-// Clients in action
+// Client code
 func TestBuilder(t *testing.T) {
 	var concreteBuilder ConcreteBuilder = NewConcreteBuilder()
 	// Director can accept different types of concrete builders
